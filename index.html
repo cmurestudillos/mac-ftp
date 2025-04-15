@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAC Transmit FTP</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="connection-panel">
+          <h3>Conexiones</h3>
+          <div class="connection-form">
+            <input type="text" id="connection-name" placeholder="Nombre de la conexión" />
+            <input type="text" id="host" placeholder="Host" />
+            <input type="number" id="port" placeholder="Puerto" value="21" />
+            <input type="text" id="username" placeholder="Usuario" />
+            <input type="password" id="password" placeholder="Contraseña" />
+            <label> <input type="checkbox" id="secure" /> Conexión segura (FTPS) </label>
+            <div class="button-group">
+              <button id="connect-btn" class="primary-btn">Conectar</button>
+              <button id="save-btn">Guardar</button>
+            </div>
+          </div>
+          <hr />
+          <div class="saved-connections">
+            <h4>Conexiones guardadas</h4>
+            <ul id="connections-list">
+              <!-- Las conexiones guardadas se cargarán aquí -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="file-explorer-container">
+          <div class="file-explorer local">
+            <div class="explorer-header">
+              <h3>Archivos locales</h3>
+              <div class="path-navigation">
+                <button id="local-parent-btn">⬆️</button>
+                <input type="text" id="local-path" readonly />
+                <button id="browse-btn">Explorar...</button>
+              </div>
+            </div>
+            <div class="files-container" id="local-files">
+              <!-- Archivos locales aquí -->
+            </div>
+          </div>
+
+          <div class="file-explorer remote">
+            <div class="explorer-header">
+              <h3>Archivos remotos</h3>
+              <div class="path-navigation">
+                <button id="remote-parent-btn">⬆️</button>
+                <input type="text" id="remote-path" value="/" readonly />
+              </div>
+            </div>
+            <div class="files-container" id="remote-files">
+              <!-- Archivos remotos aquí -->
+            </div>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <div id="status-message">Listo</div>
+          <div id="transfer-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

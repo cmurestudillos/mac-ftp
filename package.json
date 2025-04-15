@@ -1,0 +1,51 @@
+{
+  "name": "mac-ftp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package:mac": "electron-builder build --mac",
+    "package:win": "electron-builder build --windows",
+    "package:linux": "electron-builder build --linux"
+  },
+  "keywords": [
+    "electron",
+    "ftp",
+    "file-transfer"
+  ],
+  "author": "Carlos Mur",
+  "license": "ISC",
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "electron-store": "^8.2.0",
+    "ftp-client": "^0.2.2"
+  },
+  "devDependencies": {
+    "electron": "^35.1.4",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-jsdoc": "^50.6.8",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.3"
+  },
+  "build": {
+    "appId": "com.cmurestudillos.mac-transmit-ftp",
+    "productName": "MAC Transmit FTP",
+    "directories": {
+      "output": "release/"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/icon.icns"
+    },
+    "win": {
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "category": "Development"
+    }
+  }
+}
