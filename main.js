@@ -18,9 +18,6 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
-      enableRemoteModule: false,
-      // Mostrar errores de preload en la consola del proceso principal
-      additionalArguments: ['--enable-logging'],
     },
   });
 
@@ -40,9 +37,6 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // Deshabilitar la reutilización del proceso de renderizado para evitar problemas con módulos nativos
-  app.allowRendererProcessReuse = false;
-
   createWindow();
 
   app.on('activate', () => {
@@ -59,6 +53,11 @@ app.on('window-all-closed', () => {
 });
 
 // Manejadores de IPC para la comunicación entre el proceso principal y el renderizador
+
+// Obtener directorio home del usuario
+ipcMain.handle('get-home-directory', () => {
+  return app.getPath('home');
+});
 
 // Seleccionar directorio local
 ipcMain.handle('select-directory', async () => {
@@ -137,7 +136,7 @@ ipcMain.handle('ftp-connect', async (event, config) => {
 
     const { host, port, user, password, secure } = config;
 
-    client.ftp.verbose = true; // Para depuración
+    client.ftp.verbose = !app.isPackaged;
 
     await client.access({
       host,
@@ -219,7 +218,7 @@ ipcMain.handle('ftp-upload-file', async (event, localPath, remotePath) => {
 });
 
 // Desconectar
-ipcMain.handle('ftp-disconnect', async event => {
+ipcMain.handle('ftp-disconnect', async () => {
   if (global.ftpClient) {
     global.ftpClient.close();
     global.ftpClient = null;

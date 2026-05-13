@@ -1,22 +1,22 @@
 # MAC FTP Client
 
-Una aplicación de cliente FTP moderna y fácil de usar, construida con Electron. Permite transferir archivos entre tu computadora y servidores remotos con una interfaz intuitiva y amigable, similar a clientes FTP comerciales como Transmit.
+Una aplicación de cliente FTP moderna y fácil de usar, construida con Electron. Permite transferir archivos entre tu computadora y servidores remotos con una interfaz dual-panel intuitiva, similar a clientes FTP comerciales como Transmit.
 
 ## Características
 
-- 🔄 Conexión a servidores FTP estándar
-- 📂 Explorador de archivos dual (local y remoto)
-- ⬆️ Carga y descarga de archivos
-- 📝 Gestión de conexiones guardadas
-- 🔍 Navegación sencilla por directorios
-- 🔒 Soporte para conexiones seguras (FTPS)
-- 📱 Aplicación multiplataforma (macOS, Windows, Linux)
+- Conexión a servidores FTP y FTPS (conexión segura)
+- Explorador de archivos dual (local y remoto)
+- Subida y descarga de archivos con un clic
+- Visualización del tamaño de archivos remotos
+- Gestión de conexiones guardadas (persistentes entre sesiones)
+- Navegación sencilla por directorios
+- Aplicación multiplataforma (macOS, Windows, Linux)
 
 ## Instalación
 
 ### Requisitos previos
 - [Node.js](https://nodejs.org/)
-- npm (incluido con Node.js)
+- [pnpm](https://pnpm.io/) (`npm install -g pnpm`)
 
 ### Pasos de instalación
 
@@ -28,10 +28,10 @@ git clone https://github.com/cmurestudillos/mac-ftp.git
 cd mac-ftp
 
 # Instalar dependencias
-npm install
+pnpm install
 
 # Iniciar la aplicación
-npm start
+pnpm start
 ```
 
 ### Descargar versión compilada
@@ -44,34 +44,43 @@ También puedes descargar la versión compilada para tu sistema operativo desde 
    - Haz clic en "Conectar"
 
 2. **Navegar por los archivos**:
-   - El panel izquierdo muestra tus archivos locales
+   - El panel izquierdo muestra tus archivos locales (arranca en tu directorio home)
    - El panel derecho muestra los archivos en el servidor remoto
-   - Haz clic en las carpetas para navegar por los directorios
+   - Haz clic en las carpetas para navegar; usa ⬆️ para subir al directorio padre
 
 3. **Transferir archivos**:
-   - Haz clic en un archivo en el panel local para subirlo al servidor
-   - Haz clic en un archivo en el panel remoto para descargarlo a tu computadora
+   - Haz clic en un archivo local para subirlo al servidor
+   - Haz clic en un archivo remoto para descargarlo a tu directorio local actual
 
 4. **Guardar conexiones**:
-   - Ingresa un nombre para la conexión
-   - Haz clic en "Guardar"
-   - Las conexiones guardadas aparecerán en la barra lateral
-
-## Tecnologías utilizadas
-
-- [Electron](https://www.electronjs.org/) - Framework para crear aplicaciones de escritorio con tecnologías web
-- [basic-ftp](https://github.com/patrickjuchli/basic-ftp) - Cliente FTP moderno para Node.js
-- [electron-store](https://github.com/sindresorhus/electron-store) - Almacenamiento persistente para aplicaciones Electron
+   - Ingresa un nombre para la conexión y haz clic en "Guardar"
+   - Las conexiones guardadas aparecen en la barra lateral con acceso rápido (⚡)
 
 ## Desarrollo
 
 ```bash
 # Iniciar en modo desarrollo
-npm start
+pnpm start
+
+# Lint
+pnpm lint
+pnpm lint:fix
+
+# Formato
+pnpm format:check
+pnpm format
 
 # Construir para producción
-npm run build
+pnpm package:win
+pnpm package:mac
+pnpm package:linux
 ```
+
+## Tecnologías utilizadas
+
+- [Electron](https://www.electronjs.org/) — Framework para aplicaciones de escritorio con tecnologías web
+- [basic-ftp](https://github.com/patrickjuchli/basic-ftp) — Cliente FTP moderno para Node.js
+- [electron-store](https://github.com/sindresorhus/electron-store) — Almacenamiento persistente para aplicaciones Electron
 
 ## Contribuciones
 
@@ -85,10 +94,4 @@ Las contribuciones son bienvenidas. Por favor, sigue estos pasos:
 
 ## Licencia
 
-Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información.
-
-## Agradecimientos
-
-- [Electron](https://www.electronjs.org/)
-- [basic-ftp](https://github.com/patrickjuchli/basic-ftp)
-- [electron-store](https://github.com/sindresorhus/electron-store)
+Distribuido bajo la Licencia ISC.
