@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 // Exponemos una API segura para el proceso de renderizado
 contextBridge.exposeInMainWorld('electronAPI', {
   // Funciones para IPC con el proceso principal
+  getHomeDirectory: () => ipcRenderer.invoke('get-home-directory'),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
   saveConnection: connection => ipcRenderer.invoke('save-connection', connection),
   getConnections: () => ipcRenderer.invoke('get-connections'),

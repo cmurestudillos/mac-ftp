@@ -33,27 +33,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  console.log('API de Electron disponible:', Object.keys(window.electronAPI));
+  loadSavedConnections();
 
-  // Cargar conexiones guardadas
-  try {
-    loadSavedConnections();
-  } catch (error) {
-    console.error('Error al cargar conexiones:', error);
-  }
-
-  // Seleccionar directorio local por defecto (documentos)
-  try {
-    const defaultDir = await window.electronAPI.selectDirectory();
-    if (defaultDir) {
-      currentLocalPath = defaultDir;
-      localPathInput.value = currentLocalPath;
-      loadLocalFiles(currentLocalPath);
-    }
-  } catch (error) {
-    console.error('Error al seleccionar directorio inicial:', error);
-    showStatus('Error al seleccionar directorio inicial', true);
-  }
+  const homeDir = await window.electronAPI.getHomeDirectory();
+  currentLocalPath = homeDir;
+  localPathInput.value = homeDir;
+  loadLocalFiles(homeDir);
 });
 
 // Manejadores de eventos
@@ -110,7 +95,7 @@ async function loadSavedConnections() {
 
       connectionsList.appendChild(li);
     });
-  } catch (error) {
+  } catch {
     showStatus('Error al cargar conexiones guardadas', true);
   }
 }
@@ -146,7 +131,7 @@ async function saveConnection() {
     await window.electronAPI.saveConnection(connection);
     showStatus('Conexión guardada correctamente');
     loadSavedConnections();
-  } catch (error) {
+  } catch {
     showStatus('Error al guardar la conexión', true);
   }
 }
@@ -208,7 +193,7 @@ async function browseLocalDirectory() {
       localPathInput.value = currentLocalPath;
       loadLocalFiles(currentLocalPath);
     }
-  } catch (error) {
+  } catch {
     showStatus('Error al seleccionar directorio', true);
   }
 }
@@ -286,6 +271,14 @@ function createFileElement(file, isLocal) {
   nameElement.textContent = file.name;
   fileElement.appendChild(nameElement);
 
+  // Tamaño para archivos remotos
+  if (!isLocal && !file.isDirectory && file.size !== undefined) {
+    const sizeElement = document.createElement('span');
+    sizeElement.className = 'file-size';
+    sizeElement.textContent = formatFileSize(file.size);
+    fileElement.appendChild(sizeElement);
+  }
+
   // Manejador de eventos para navegación o transferencia
   fileElement.addEventListener('click', () => {
     if (file.isDirectory) {
@@ -323,18 +316,23 @@ function createFileElement(file, isLocal) {
 
 // Función para navegar al directorio padre local
 function navigateLocalParent() {
-  if (!currentLocalPath) return;
+  if (!currentLocalPath) {
+    return;
+  }
 
   const pathParts = currentLocalPath.split(/[/\\]/);
-  // Eliminar el último elemento para obtener el directorio padre
   pathParts.pop();
 
-  // Verificar si queda algo en la ruta (para evitar rutas vacías)
-  if (pathParts.length > 0) {
-    const parentPath = pathParts.join('/');
-    currentLocalPath = parentPath;
-    loadLocalFiles(parentPath);
+  if (pathParts.length === 0) {
+    return;
   }
+
+  // En Windows, si queda solo la letra de unidad (ej: "C:"), añadir "/" para leer la raíz
+  const parentPath =
+    pathParts.length === 1 && /^[A-Za-z]:$/.test(pathParts[0]) ? pathParts[0] + '/' : pathParts.join('/');
+
+  currentLocalPath = parentPath;
+  loadLocalFiles(parentPath);
 }
 
 // Función para navegar al directorio padre remoto
@@ -412,6 +410,20 @@ async function downloadFile(fileName) {
   } catch (error) {
     showStatus(`Error al descargar archivo: ${error.message}`, true);
   }
+}
+
+// Función para formatear tamaño de archivo
+function formatFileSize(bytes) {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  }
+  if (bytes < 1024 * 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+  return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 
 // Función para mostrar mensajes de estado

@@ -1,10 +1,14 @@
 {
   "name": "mac-ftp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "lint": "eslint main.js preload.js renderer.js",
+    "lint:fix": "eslint --fix main.js preload.js renderer.js",
+    "format": "prettier --write main.js preload.js renderer.js index.html styles.css",
+    "format:check": "prettier --check main.js preload.js renderer.js index.html styles.css",
     "package:mac": "electron-builder build --mac",
     "package:win": "electron-builder build --windows",
     "package:linux": "electron-builder build --linux"
@@ -18,16 +22,15 @@
   "license": "ISC",
   "dependencies": {
     "basic-ftp": "^5.0.5",
-    "electron-store": "^8.2.0",
-    "ftp-client": "^0.2.2"
+    "electron-store": "^8.2.0"
   },
   "devDependencies": {
     "electron": "^41.2.1",
     "electron-builder": "^26.8.1",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-jsdoc": "^50.6.8",
     "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^17.6.0",
     "prettier": "^3.5.3"
   },
   "build": {
