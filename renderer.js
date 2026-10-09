@@ -579,6 +579,20 @@ function setupPanelEvents(panel) {
 
   container.addEventListener('keydown', e => handlePanelKey(panel, e));
 
+  container.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    activeSide = panel.side;
+    container.focus();
+    const entry = entryFromElement(panel, e.target);
+    // Clic derecho sobre un elemento no seleccionado: pasa a ser la selección
+    if (entry && !panel.selected.has(entry.name)) {
+      setSelection(panel, [entry.name], entry.name);
+    } else if (!entry) {
+      setSelection(panel, []);
+    }
+    showContextMenu(panel, e.clientX, e.clientY);
+  });
+
   panel.filterInput.addEventListener('input', () => {
     panel.filter = panel.filterInput.value;
     renderPanel(panel);
@@ -686,6 +700,15 @@ function handlePanelKey(panel, e) {
       panel,
       entries.map(entry => entry.name)
     );
+  } else if (e.key === 'F2') {
+    e.preventDefault();
+    const selection = selectedEntries(panel);
+    if (selection.length === 1) {
+      renameEntry(panel, selection[0]);
+    }
+  } else if (e.key === 'Delete') {
+    e.preventDefault();
+    deleteEntries(panel, selectedEntries(panel));
   } else if (e.key === 'Escape') {
     setSelection(panel, []);
   }
@@ -966,6 +989,220 @@ async function stopTransfers() {
   }
 }
 
+// MENÚ CONTEXTUAL Y OPERACIONES DE ARCHIVO
+
+const contextMenu = document.getElementById('context-menu');
+
+function showContextMenu(panel, x, y) {
+  const selection = selectedEntries(panel);
+  const remoteOffline = panel.side === 'remote' && !connected;
+  const single = selection.length === 1 ? selection[0] : null;
+  const verb = panel.side === 'local' ? 'Subir' : 'Descargar';
+  const items = [];
+
+  if (single && single.isDirectory) {
+    items.push({ label: 'Abrir', shortcut: 'Intro', action: () => openEntries(panel, [single]) });
+  }
+  if (selection.length > 0) {
+    items.push({
+      label: selection.length > 1 ? `${verb} ${selection.length} elementos` : verb,
+      shortcut: single && single.isDirectory ? '' : 'Intro',
+      disabled: !connected,
+      action: () => transferEntries(panel, selection),
+    });
+    items.push(null);
+    items.push({ label: 'Renombrar...', shortcut: 'F2', disabled: !single, action: () => renameEntry(panel, single) });
+    items.push({
+      label: panel.side === 'local' ? 'Mover a la papelera' : 'Eliminar',
+      shortcut: 'Supr',
+      action: () => deleteEntries(panel, selection),
+    });
+    items.push(null);
+  }
+  items.push({ label: 'Nueva carpeta...', action: () => createFolder(panel) });
+  items.push({ label: 'Actualizar', shortcut: 'F5', action: () => refreshPanel(panel) });
+
+  contextMenu.innerHTML = '';
+  for (const item of items) {
+    if (item === null) {
+      const separator = document.createElement('div');
+      separator.className = 'menu-separator';
+      contextMenu.appendChild(separator);
+      continue;
+    }
+    const el = document.createElement('div');
+    el.className = 'menu-item';
+    if (item.disabled || remoteOffline) {
+      el.classList.add('disabled');
+    }
+    const label = document.createElement('span');
+    label.textContent = item.label;
+    el.appendChild(label);
+    if (item.shortcut) {
+      const shortcut = document.createElement('span');
+      shortcut.className = 'shortcut';
+      shortcut.textContent = item.shortcut;
+      el.appendChild(shortcut);
+    }
+    el.addEventListener('click', () => {
+      hideContextMenu();
+      item.action();
+    });
+    contextMenu.appendChild(el);
+  }
+
+  // Dentro de la ventana aunque se abra cerca de un borde
+  contextMenu.hidden = false;
+  const { offsetWidth: width, offsetHeight: height } = contextMenu;
+  contextMenu.style.left = `${Math.min(x, window.innerWidth - width - 4)}px`;
+  contextMenu.style.top = `${Math.min(y, window.innerHeight - height - 4)}px`;
+}
+
+function hideContextMenu() {
+  contextMenu.hidden = true;
+}
+
+document.addEventListener('mousedown', e => {
+  if (!contextMenu.contains(e.target)) {
+    hideContextMenu();
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    hideContextMenu();
+  }
+});
+window.addEventListener('blur', hideContextMenu);
+window.addEventListener('resize', hideContextMenu);
+document.addEventListener('scroll', hideContextMenu, true);
+
+// Nombre válido para un archivo o carpeta (sin separadores de ruta)
+function validateName(name, panel) {
+  if (!name) {
+    return 'El nombre no puede estar vacío';
+  }
+  if (name === '.' || name === '..' || /[/\\]/.test(name)) {
+    return 'El nombre no puede contener / ni \\';
+  }
+  if (panel.side === 'local' && /[<>:"|?*]/.test(name) && navigator.userAgent.includes('Windows')) {
+    return 'El nombre no puede contener < > : " | ? *';
+  }
+  return null;
+}
+
+async function renameEntry(panel, entry) {
+  if (!entry || (panel.side === 'remote' && !connected)) {
+    return;
+  }
+  const newName = await askName({
+    title: 'Renombrar',
+    message: `Nuevo nombre para «${entry.name}»:`,
+    value: entry.name,
+    acceptLabel: 'Renombrar',
+    selectBaseName: !entry.isDirectory,
+  });
+  if (newName === null || newName === entry.name) {
+    return;
+  }
+  const error = validateName(newName, panel);
+  if (error) {
+    showStatus(error, true);
+    return;
+  }
+  if (panel.side === 'remote' && panel.entries.some(item => item.name === newName)) {
+    showStatus(`Ya existe un elemento llamado ${newName}`, true);
+    return;
+  }
+
+  const result =
+    panel.side === 'local'
+      ? await api.localRename(entry.path, newName)
+      : await api.ftpRename(joinRemote(panel.path, entry.name), joinRemote(panel.path, newName));
+  if (!result.success) {
+    showStatus(`No se ha podido renombrar: ${result.message}`, true);
+    return;
+  }
+  panel.selected = new Set([newName]);
+  panel.anchor = newName;
+  await refreshPanel(panel);
+  showStatus(`${entry.name} renombrado a ${newName}`);
+}
+
+async function deleteEntries(panel, entries) {
+  if (entries.length === 0 || (panel.side === 'remote' && !connected)) {
+    return;
+  }
+  const local = panel.side === 'local';
+  const what = entries.length === 1 ? `«${entries[0].name}»` : `${entries.length} elementos`;
+  const answer = await askConfirm({
+    title: local ? 'Mover a la papelera' : 'Eliminar del servidor',
+    message: local
+      ? `¿Mover ${what} a la papelera?`
+      : `¿Eliminar ${what} del servidor? Esta acción no se puede deshacer.`,
+    list: entries.length > 1 ? entries.map(entry => entry.name) : [],
+    note: !local && entries.some(entry => entry.isDirectory) ? 'Las carpetas se eliminan con todo su contenido.' : '',
+    buttons: [
+      { label: local ? 'Mover a la papelera' : 'Eliminar', value: 'ok', danger: true },
+      { label: 'Cancelar', value: null },
+    ],
+  });
+  if (answer !== 'ok') {
+    return;
+  }
+
+  showStatus(local ? 'Moviendo a la papelera...' : 'Eliminando...');
+  const result = local
+    ? await api.localTrash(entries.map(entry => entry.path))
+    : await api.ftpDelete(
+        entries.map(entry => ({ path: joinRemote(panel.path, entry.name), isDirectory: entry.isDirectory }))
+      );
+  await refreshPanel(panel);
+  if (result.success) {
+    const plural = entries.length > 1 ? 's' : '';
+    showStatus(local ? `${what} movido${plural} a la papelera` : `${what} eliminado${plural} del servidor`);
+  } else {
+    showStatus(`No se ha podido eliminar: ${result.message}`, true);
+  }
+}
+
+async function createFolder(panel) {
+  if (panel.side === 'remote' && !connected) {
+    return;
+  }
+  const name = await askName({
+    title: 'Nueva carpeta',
+    message: `Crear una carpeta en ${panel.path}:`,
+    value: 'Nueva carpeta',
+    acceptLabel: 'Crear',
+  });
+  if (name === null) {
+    return;
+  }
+  const error = validateName(name, panel);
+  if (error) {
+    showStatus(error, true);
+    return;
+  }
+  const exists = panel.entries.some(entry =>
+    panel.side === 'local' ? entry.name.toLowerCase() === name.toLowerCase() : entry.name === name
+  );
+  if (exists) {
+    showStatus(`Ya existe un elemento llamado ${name}`, true);
+    return;
+  }
+
+  const result =
+    panel.side === 'local' ? await api.localMkdir(panel.path, name) : await api.ftpMkdir(joinRemote(panel.path, name));
+  if (!result.success) {
+    showStatus(`No se ha podido crear la carpeta: ${result.message}`, true);
+    return;
+  }
+  panel.selected = new Set([name]);
+  panel.anchor = name;
+  await refreshPanel(panel);
+  showStatus(`Carpeta ${name} creada`);
+}
+
 // DIÁLOGO MODAL
 
 const modal = document.getElementById('modal');
@@ -1069,6 +1306,20 @@ modal.addEventListener('cancel', e => {
 async function askConfirm(options) {
   const result = await openModal(options);
   return result ? result.value : null;
+}
+
+// Pide un nombre; null si se cancela
+async function askName({ title, message, value, acceptLabel, selectBaseName = false }) {
+  const result = await openModal({
+    title,
+    message,
+    input: { value, selectBaseName },
+    buttons: [
+      { label: acceptLabel, value: 'ok', primary: true },
+      { label: 'Cancelar', value: null },
+    ],
+  });
+  return result ? result.input.trim() : null;
 }
 
 // UTILIDADES

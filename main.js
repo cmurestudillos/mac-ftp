@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, safeStorage, screen, nativeTheme } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, safeStorage, screen, nativeTheme, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store');
@@ -568,3 +568,62 @@ ipcMain.handle('ftp-cancel', () => {
   }
   return true;
 });
+
+// OPERACIONES DE ARCHIVO (menú contextual)
+
+async function fsResult(operation) {
+  try {
+    return { success: true, data: await operation() };
+  } catch (error) {
+    console.error('Error en operación local:', error);
+    return { success: false, message: describeFsError(error) };
+  }
+}
+
+// Renombrar un archivo o carpeta local sin pisar uno existente
+ipcMain.handle('local-rename', (event, oldPath, newName) =>
+  fsResult(async () => {
+    const newPath = path.join(path.dirname(oldPath), newName);
+    // En Windows/macOS cambiar solo mayúsculas apunta al mismo archivo: no es un conflicto
+    const sameFile = newPath.toLowerCase() === oldPath.toLowerCase();
+    if (!sameFile && fs.existsSync(newPath)) {
+      throw Object.assign(new Error('ya existe'), { code: 'EEXIST', path: newName });
+    }
+    await fs.promises.rename(oldPath, newPath);
+    return newPath;
+  })
+);
+
+// Eliminar en local = mover a la papelera (recuperable)
+ipcMain.handle('local-trash', (event, paths) =>
+  fsResult(async () => {
+    for (const filePath of paths) {
+      await shell.trashItem(filePath);
+    }
+  })
+);
+
+ipcMain.handle('local-mkdir', (event, directory, name) =>
+  fsResult(async () => {
+    const dirPath = path.join(directory, name);
+    await fs.promises.mkdir(dirPath);
+    return dirPath;
+  })
+);
+
+ipcMain.handle('ftp-rename', (event, fromPath, toPath) =>
+  ftpResult('renombrar en el servidor', () => withFtp(client => client.rename(fromPath, toPath)))
+);
+
+// Eliminar en el servidor (definitivo); las carpetas con todo su contenido
+ipcMain.handle('ftp-delete', (event, items) =>
+  ftpResult('eliminar en el servidor', async () => {
+    for (const item of items) {
+      await withFtp(client => (item.isDirectory ? client.removeDir(item.path) : client.remove(item.path)));
+    }
+  })
+);
+
+ipcMain.handle('ftp-mkdir', (event, remotePath) =>
+  ftpResult('crear la carpeta en el servidor', () => withFtp(client => client.send('MKD ' + remotePath)))
+);

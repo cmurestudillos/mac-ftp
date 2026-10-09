@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getConnections: () => ipcRenderer.invoke('get-connections'),
   deleteConnection: name => ipcRenderer.invoke('delete-connection', name),
   listLocalDirectory: directory => ipcRenderer.invoke('list-local-directory', directory),
+  localRename: (oldPath, newName) => ipcRenderer.invoke('local-rename', oldPath, newName),
+  localTrash: paths => ipcRenderer.invoke('local-trash', paths),
+  localMkdir: (directory, name) => ipcRenderer.invoke('local-mkdir', directory, name),
   // Ruta en disco de un archivo soltado desde el Explorador/Finder
   getPathForFile: file => webUtils.getPathForFile(file),
 
@@ -26,6 +29,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   ftpIsDirectory: remotePath => ipcRenderer.invoke('ftp-is-directory', remotePath),
   ftpTransfer: job => ipcRenderer.invoke('ftp-transfer', job),
   ftpCancel: () => ipcRenderer.invoke('ftp-cancel'),
+  ftpRename: (fromPath, toPath) => ipcRenderer.invoke('ftp-rename', fromPath, toPath),
+  ftpDelete: items => ipcRenderer.invoke('ftp-delete', items),
+  ftpMkdir: remotePath => ipcRenderer.invoke('ftp-mkdir', remotePath),
   ftpDisconnect: () => ipcRenderer.invoke('ftp-disconnect'),
 
   onTransferProgress: callback => subscribe('transfer-progress', callback),
