@@ -10,6 +10,15 @@ const store = new Store();
 let mainWindow;
 global.ftpClient = null;
 
+// basic-ftp no admite dos operaciones a la vez: si se lanza una mientras otra sigue en curso, cierra la conexión.
+// Todas las operaciones FTP pasan por esta cola para ejecutarse de una en una (p. ej. dos clics seguidos).
+let ftpQueue = Promise.resolve();
+function runFtp(task) {
+  const result = ftpQueue.then(task, task);
+  ftpQueue = result.catch(() => {});
+  return result;
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1800,
@@ -167,7 +176,7 @@ ipcMain.handle('ftp-list-directory', async (event, remotePath) => {
 
   try {
     console.log('Listando directorio remoto:', remotePath);
-    const list = await global.ftpClient.list(remotePath || '.');
+    const list = await runFtp(() => global.ftpClient.list(remotePath || '.'));
 
     return {
       success: true,
@@ -193,7 +202,7 @@ ipcMain.handle('ftp-download-file', async (event, remotePath, localPath) => {
 
   try {
     console.log(`Descargando ${remotePath} a ${localPath}`);
-    await global.ftpClient.downloadTo(localPath, remotePath);
+    await runFtp(() => global.ftpClient.downloadTo(localPath, remotePath));
     return { success: true, message: 'Archivo descargado correctamente' };
   } catch (error) {
     console.error('Error al descargar archivo:', error);
@@ -209,7 +218,7 @@ ipcMain.handle('ftp-upload-file', async (event, localPath, remotePath) => {
 
   try {
     console.log(`Subiendo ${localPath} a ${remotePath}`);
-    await global.ftpClient.uploadFrom(localPath, remotePath);
+    await runFtp(() => global.ftpClient.uploadFrom(localPath, remotePath));
     return { success: true, message: 'Archivo subido correctamente' };
   } catch (error) {
     console.error('Error al subir archivo:', error);
