@@ -404,6 +404,7 @@ ipcMain.handle('ftp-disconnect', async () => {
 // TRANSFERENCIAS
 
 let transferCancelled = false;
+let transferActive = false;
 let transferProgressFile = null;
 
 // Recorre una carpeta local: subcarpetas a crear y archivos con su tamaño (sin seguir enlaces, para evitar bucles)
@@ -441,6 +442,7 @@ async function walkRemote(root, rel = '', result = { dirs: [], files: [] }) {
 // job = { direction: 'upload' | 'download', source, targetDir, name, isDirectory, size }
 ipcMain.handle('ftp-transfer', async (event, job) => {
   transferCancelled = false;
+  transferActive = true;
   const upload = job.direction === 'upload';
   const target = upload ? path.posix.join(job.targetDir, job.name) : path.join(job.targetDir, job.name);
   // Ruta del archivo en destino a partir de su ruta relativa dentro de la carpeta transferida
@@ -539,6 +541,7 @@ ipcMain.handle('ftp-transfer', async (event, job) => {
   } finally {
     transferProgressFile = null;
     transferCancelled = false;
+    transferActive = false;
   }
 });
 
@@ -559,7 +562,8 @@ async function removePartialFile() {
 // Cancelar la transferencia en curso: basic-ftp no permite abortarla, se cierra la conexión
 // (la siguiente operación reconecta sola)
 ipcMain.handle('ftp-cancel', () => {
-  if (!transferProgressFile) {
+  // También durante la preparación (p. ej. mientras se recorre una carpeta remota grande)
+  if (!transferActive) {
     return false;
   }
   transferCancelled = true;
