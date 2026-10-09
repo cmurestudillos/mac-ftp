@@ -189,9 +189,7 @@ async function browseLocalDirectory() {
     const selectedDir = await window.electronAPI.selectDirectory();
 
     if (selectedDir) {
-      currentLocalPath = selectedDir;
-      localPathInput.value = currentLocalPath;
-      loadLocalFiles(currentLocalPath);
+      loadLocalFiles(selectedDir);
     }
   } catch {
     showStatus('Error al seleccionar directorio', true);
@@ -212,7 +210,8 @@ async function loadLocalFiles(directory) {
       localFilesContainer.appendChild(fileElement);
     });
 
-    // Actualizar ruta actual
+    // Actualizar ruta actual (solo si se ha podido leer: si falla se sigue en la carpeta anterior)
+    currentLocalPath = directory;
     localPathInput.value = directory;
   } catch (error) {
     showStatus(`Error al cargar archivos locales: ${error.message}`, true);
@@ -284,8 +283,7 @@ function createFileElement(file, isLocal) {
     if (file.isDirectory) {
       // Navegación
       if (isLocal) {
-        currentLocalPath = file.path;
-        loadLocalFiles(currentLocalPath);
+        loadLocalFiles(file.path);
       } else {
         const newPath = currentRemotePath === '/' ? `/${file.name}` : `${currentRemotePath}/${file.name}`;
 
@@ -320,18 +318,24 @@ function navigateLocalParent() {
     return;
   }
 
-  const pathParts = currentLocalPath.split(/[/\\]/);
-  pathParts.pop();
+  const pathParts = currentLocalPath.split(/[/\\]/).filter(part => part !== '');
+  const isPosix = currentLocalPath.startsWith('/');
 
-  if (pathParts.length === 0) {
+  // Ya en la raíz: "/" en macOS/Linux o "C:/" en Windows
+  if (pathParts.length === 0 || (!isPosix && pathParts.length === 1)) {
     return;
   }
 
-  // En Windows, si queda solo la letra de unidad (ej: "C:"), añadir "/" para leer la raíz
-  const parentPath =
-    pathParts.length === 1 && /^[A-Za-z]:$/.test(pathParts[0]) ? pathParts[0] + '/' : pathParts.join('/');
+  pathParts.pop();
 
-  currentLocalPath = parentPath;
+  let parentPath;
+  if (isPosix) {
+    parentPath = '/' + pathParts.join('/');
+  } else {
+    // En Windows, si queda solo la letra de unidad (ej: "C:"), añadir "/" para leer la raíz
+    parentPath = pathParts.length === 1 ? pathParts[0] + '/' : pathParts.join('/');
+  }
+
   loadLocalFiles(parentPath);
 }
 

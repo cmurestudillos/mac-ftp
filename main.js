@@ -116,13 +116,20 @@ ipcMain.handle('list-local-directory', async (event, directory) => {
   try {
     const files = await fs.promises.readdir(directory, { withFileTypes: true });
 
-    return files.map(file => {
-      return {
-        name: file.name,
-        isDirectory: file.isDirectory(),
-        path: path.join(directory, file.name),
-      };
-    });
+    return Promise.all(
+      files.map(async file => {
+        const filePath = path.join(directory, file.name);
+        let isDirectory = file.isDirectory();
+        // Los enlaces simbólicos (y junctions de Windows) se resuelven para saber si apuntan a una carpeta
+        if (file.isSymbolicLink()) {
+          isDirectory = await fs.promises
+            .stat(filePath)
+            .then(stats => stats.isDirectory())
+            .catch(() => false);
+        }
+        return { name: file.name, isDirectory, path: filePath };
+      })
+    );
   } catch (error) {
     console.error('Error al listar directorio local:', error);
     throw error;
