@@ -175,12 +175,23 @@ async function connectToFTP() {
       // Cargar archivos remotos
       loadRemoteFiles(currentRemotePath);
     } else {
+      // El proceso principal ya ha cerrado la conexión anterior: no dejar el panel remoto como si siguiera activa
+      resetRemotePanel();
       showStatus(`Error de conexión: ${result.message}`, true);
     }
   } catch (error) {
     console.error('Error completo:', error);
+    resetRemotePanel();
     showStatus(`Error de conexión: ${error.message}`, true);
   }
+}
+
+// Función para vaciar el panel remoto cuando no hay conexión
+function resetRemotePanel() {
+  currentConnection = null;
+  currentRemotePath = '/';
+  remotePathInput.value = currentRemotePath;
+  remoteFilesContainer.innerHTML = '';
 }
 
 // Función para explorar directorios locales
