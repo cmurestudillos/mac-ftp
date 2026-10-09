@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="es" data-theme="auto">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MAC Transmit FTP — Cliente FTP y FTPS de doble panel</title>
+    <meta
+      name="description"
+      content="Cliente FTP/FTPS de escritorio con doble panel inspirado en Transmit: arrastra archivos y carpetas, sigue el progreso de cada transferencia y guarda tus conexiones cifradas. Windows, macOS y Linux." />
+    <meta name="color-scheme" content="light dark" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://api.github.com" />
+    <link rel="icon" href="assets/icons/icon.png" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="MAC Transmit FTP — Cliente FTP y FTPS de doble panel" />
+    <meta
+      property="og:description"
+      content="Sube y descarga archivos y carpetas completas arrastrando entre paneles, con progreso real, reconexión automática y contraseñas cifradas. Gratis y de código abierto." />
+    <meta property="og:image" content="https://cmurestudillos.github.io/mac-ftp/assets/screenshots/01-principal.png" />
+    <meta property="og:url" content="https://cmurestudillos.github.io/mac-ftp/" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#/">
+          <img src="assets/icons/icon.png" alt="" width="32" height="32" />
+          <span>MAC Transmit FTP</span>
+        </a>
+
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav class="site-nav" id="siteNav" aria-label="Navegación principal">
+          <a href="#/" data-route-link="/">Inicio</a>
+          <a href="#/caracteristicas" data-route-link="/caracteristicas">Características</a>
+          <a href="#/capturas" data-route-link="/capturas">Capturas</a>
+          <a href="#/descargas" data-route-link="/descargas">Descargas</a>
+          <a href="#/documentacion" data-route-link="/documentacion">Documentación</a>
+          <a class="nav-cta" href="https://github.com/cmurestudillos/mac-ftp" rel="noopener">GitHub</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" title="Cambiar tema">
+            <span aria-hidden="true">🌗</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ══════════════════ INICIO ══════════════════ -->
+      <section class="view" data-route="/">
+        <div class="hero">
+          <div class="container hero-inner">
+            <div class="hero-copy">
+              <p class="eyebrow">
+                <span class="dot"></span> Código abierto · ISC ·
+                <span id="heroVersion">v1.2.0</span>
+              </p>
+              <h1>Tus archivos, de un panel al otro</h1>
+              <p class="lead">
+                Cliente FTP y FTPS de escritorio inspirado en Transmit. Tu equipo a la izquierda, el servidor a la
+                derecha: arrastra archivos o carpetas completas y sigue cada transferencia con su progreso real.
+              </p>
+              <div class="hero-actions">
+                <a class="btn btn-primary btn-lg" id="heroDownload" href="#/descargas"> ⬇ Descargar gratis </a>
+                <a class="btn btn-ghost btn-lg" href="#/capturas">Ver capturas</a>
+              </div>
+              <p class="hero-meta" id="heroMeta">Windows · macOS · Linux — sin registro ni cuentas</p>
+            </div>
+
+            <figure class="hero-shot">
+              <img
+                src="assets/screenshots/01-principal.png"
+                alt="Ventana de MAC Transmit FTP con los archivos locales a la izquierda, los del servidor a la derecha y las conexiones guardadas en la barra lateral"
+                width="1280"
+                height="800"
+                loading="eager" />
+            </figure>
+          </div>
+        </div>
+
+        <div class="container">
+          <ul class="stat-row">
+            <li><strong>2</strong><span>paneles: local y remoto</span></li>
+            <li><strong>FTPS</strong><span>conexión cifrada con TLS</span></li>
+            <li><strong>3</strong><span>sistemas operativos</span></li>
+            <li><strong>ISC</strong><span>licencia libre</span></li>
+          </ul>
+
+          <h2 class="section-title">Cómo funciona</h2>
+          <ol class="steps">
+            <li>
+              <span class="step-num">1</span>
+              <h3>Conecta</h3>
+              <p>
+                Escribe host, puerto, usuario y contraseña, o elige una conexión guardada y pulsa ⚡. El panel remoto se
+                abre en tu carpeta de inicio del servidor.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <h3>Elige qué mover</h3>
+              <p>
+                Selecciona uno o varios elementos con <kbd>Ctrl</kbd>/<kbd>Mayús</kbd>+clic. Archivos y carpetas, en
+                cualquiera de los dos paneles.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <h3>Transfiere</h3>
+              <p>
+                Doble clic, <kbd>Intro</kbd> o arrástralos al otro panel. Si algo ya existe en destino, decides si
+                sobrescribir u omitirlo.
+              </p>
+            </li>
+          </ol>
+
+          <div class="cta-band">
+            <div>
+              <h2>Deja de subir archivos uno a uno</h2>
+              <p>Instaladores para Windows, macOS y Linux. Gratis, sin anuncios y con el código en GitHub.</p>
+            </div>
+            <a class="btn btn-light btn-lg" href="#/descargas">Ir a descargas</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════ CARACTERÍSTICAS ══════════════════ -->
+      <section class="view" data-route="/caracteristicas">
+        <div class="container">
+          <h1 class="page-title">Características</h1>
+          <p class="page-lead">
+            Lo necesario para mantener una web o un alojamiento por FTP sin pelearte con la herramienta.
+          </p>
+
+          <div class="card-grid">
+            <article class="card">
+              <span class="card-icon">🗂️</span>
+              <h3>Doble panel</h3>
+              <p>
+                Archivos locales y remotos lado a lado, con carpetas primero, tamaño y fecha de modificación en ambos
+                paneles.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">🖱️</span>
+              <h3>Arrastrar y soltar</h3>
+              <p>
+                Arrastra entre los dos paneles para subir o descargar, o suelta archivos y carpetas desde el explorador
+                del sistema en el panel remoto.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">📦</span>
+              <h3>Carpetas completas</h3>
+              <p>
+                Sube y descarga carpetas con todo su contenido. Si ya existen en destino se combinan, sobrescribiendo
+                solo los archivos con el mismo nombre.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">📊</span>
+              <h3>Progreso real</h3>
+              <p>
+                Porcentaje, velocidad, archivo actual y elementos en cola. <strong>Cancelar</strong> detiene la
+                transferencia y elimina el archivo que quedaba a medias.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">🛡️</span>
+              <h3>Sin sobrescribir por error</h3>
+              <p>
+                Antes de pisar algo te pregunta: <em>Sobrescribir</em>, <em>Omitir existentes</em> o <em>Cancelar</em>.
+                Un clic solo selecciona; transferir es un gesto explícito.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">🔐</span>
+              <h3>Contraseñas cifradas</h3>
+              <p>
+                Las conexiones guardadas cifran la contraseña con el almacén seguro del sistema operativo. Nada viaja a
+                ningún servidor que no sea el tuyo.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">🔁</span>
+              <h3>Reconexión automática</h3>
+              <p>
+                Si el servidor cierra la sesión por inactividad, la app vuelve a conectar y repite la operación sin que
+                tengas que hacer nada.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">🧰</span>
+              <h3>Gestión de archivos</h3>
+              <p>
+                Menú contextual para renombrar, eliminar y crear carpetas en local y en el servidor. En local, eliminar
+                envía a la papelera.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-icon">⌨️</span>
+              <h3>Teclado y filtros</h3>
+              <p>
+                Atajos para todo lo habitual, filtro por nombre en cada panel, botón actualizar y opción para ocultar
+                los archivos que empiezan por punto.
+              </p>
+            </article>
+          </div>
+
+          <h2 class="section-title">Atajos de teclado</h2>
+          <p class="muted">Funcionan en el panel que tiene el foco (haz clic en él primero).</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tecla</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><kbd>Intro</kbd> · doble clic</td>
+                  <td>Abrir la carpeta, o transferir los elementos seleccionados al otro panel</td>
+                </tr>
+                <tr>
+                  <td><kbd>Retroceso</kbd></td>
+                  <td>Ir a la carpeta superior</td>
+                </tr>
+                <tr>
+                  <td><kbd>↑</kbd> <kbd>↓</kbd> · <kbd>Mayús</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></td>
+                  <td>Moverse por la lista · ampliar la selección</td>
+                </tr>
+                <tr>
+                  <td><kbd>Ctrl</kbd>+clic · <kbd>Mayús</kbd>+clic</td>
+                  <td>Añadir o quitar de la selección · seleccionar un rango</td>
+                </tr>
+                <tr>
+                  <td><kbd>Ctrl</kbd>+<kbd>A</kbd></td>
+                  <td>Seleccionar todo lo visible</td>
+                </tr>
+                <tr>
+                  <td><kbd>F2</kbd></td>
+                  <td>Renombrar</td>
+                </tr>
+                <tr>
+                  <td><kbd>Supr</kbd></td>
+                  <td>Eliminar (a la papelera en local, definitivo en el servidor)</td>
+                </tr>
+                <tr>
+                  <td><kbd>F5</kbd></td>
+                  <td>Actualizar el panel</td>
+                </tr>
+                <tr>
+                  <td><kbd>Esc</kbd></td>
+                  <td>Quitar la selección o cerrar el menú</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="section-title">Protocolos y plataformas</h2>
+          <ul class="chip-list">
+            <li>FTP</li>
+            <li>FTPS explícito (TLS)</li>
+            <li>Modo pasivo</li>
+            <li>Windows 64 bits</li>
+            <li>macOS Apple Silicon</li>
+            <li>Linux AppImage</li>
+            <li>Tema claro y oscuro</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ══════════════════ CAPTURAS ══════════════════ -->
+      <section class="view" data-route="/capturas">
+        <div class="container">
+          <h1 class="page-title">Capturas</h1>
+          <p class="page-lead">
+            Capturas reales de la aplicación conectada a un alojamiento de ejemplo, con un proyecto web en local. Haz
+            clic para ampliar.
+          </p>
+
+          <div class="gallery" id="gallery">
+            <figure class="shot">
+              <button
+                class="shot-btn"
+                data-full="assets/screenshots/01-principal.png"
+                data-caption="Vista principal: el proyecto local a la izquierda, public_html del servidor a la derecha y las conexiones guardadas en la barra lateral.">
+                <img
+                  src="assets/screenshots/01-principal.png"
+                  alt="Paneles local y remoto con dos archivos seleccionados en el panel local"
+                  loading="lazy" />
+              </button>
+              <figcaption>
+                <strong>Doble panel</strong> — tamaño y fecha en ambos lados, selección múltiple y conexiones guardadas.
+              </figcaption>
+            </figure>
+
+            <figure class="shot">
+              <button
+                class="shot-btn"
+                data-full="assets/screenshots/02-transferencia.png"
+                data-caption="Descarga de la carpeta backups: archivo actual, porcentaje, velocidad y botón Cancelar en la barra inferior.">
+                <img
+                  src="assets/screenshots/02-transferencia.png"
+                  alt="Barra de progreso descargando una carpeta, con porcentaje y velocidad"
+                  loading="lazy" />
+              </button>
+              <figcaption>
+                <strong>Progreso real</strong> — carpeta completa, archivo 2 de 2, porcentaje, velocidad y Cancelar.
+              </figcaption>
+            </figure>
+
+            <figure class="shot">
+              <button
+                class="shot-btn"
+                data-full="assets/screenshots/04-menu-contextual.png"
+                data-caption="Menú contextual sobre un archivo del servidor: descargar, renombrar, eliminar, nueva carpeta y actualizar.">
+                <img
+                  src="assets/screenshots/04-menu-contextual.png"
+                  alt="Menú contextual abierto sobre un archivo del panel remoto"
+                  loading="lazy" />
+              </button>
+              <figcaption><strong>Menú contextual</strong> — cada acción con su atajo de teclado.</figcaption>
+            </figure>
+
+            <figure class="shot">
+              <button
+                class="shot-btn"
+                data-full="assets/screenshots/03-sobrescribir.png"
+                data-caption="Al subir un archivo que ya existe en el servidor la app pregunta antes: sobrescribir, omitir los existentes o cancelar.">
+                <img
+                  src="assets/screenshots/03-sobrescribir.png"
+                  alt="Diálogo que avisa de que index.html ya existe en el servidor"
+                  loading="lazy" />
+              </button>
+              <figcaption><strong>Confirmación</strong> — nada se sobrescribe sin preguntar.</figcaption>
+            </figure>
+
+            <figure class="shot">
+              <button
+                class="shot-btn"
+                data-full="assets/screenshots/05-tema-oscuro.png"
+                data-caption="Tema oscuro, que sigue al del sistema. A la derecha, la carpeta de inicio del usuario en el servidor.">
+                <img
+                  src="assets/screenshots/05-tema-oscuro.png"
+                  alt="La aplicación con el tema oscuro y dos carpetas remotas seleccionadas"
+                  loading="lazy" />
+              </button>
+              <figcaption><strong>Tema oscuro</strong> — automático, según la configuración del sistema.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════ DESCARGAS ══════════════════ -->
+      <section class="view" data-route="/descargas">
+        <div class="container">
+          <h1 class="page-title">Descargas</h1>
+          <p class="page-lead">
+            Última versión: <strong id="releaseTag">v1.2.0</strong>
+            <span id="releaseDate" class="muted"></span>
+          </p>
+
+          <div class="download-grid" id="downloadGrid">
+            <article class="download-card" data-os="windows">
+              <span class="os-icon" aria-hidden="true">🪟</span>
+              <h3>Windows</h3>
+              <p class="os-detail">Instalador <code>.exe</code> · 64 bits</p>
+              <a
+                class="btn btn-primary"
+                data-dl="windows"
+                href="https://github.com/cmurestudillos/mac-ftp/releases/latest"
+                >Descargar</a
+              >
+              <p class="dl-size" data-size="windows">&nbsp;</p>
+            </article>
+
+            <article class="download-card" data-os="mac">
+              <span class="os-icon" aria-hidden="true">🍎</span>
+              <h3>macOS</h3>
+              <p class="os-detail">Imagen <code>.dmg</code> · Apple Silicon</p>
+              <a class="btn btn-primary" data-dl="mac" href="https://github.com/cmurestudillos/mac-ftp/releases/latest"
+                >Descargar</a
+              >
+              <p class="dl-size" data-size="mac">&nbsp;</p>
+            </article>
+
+            <article class="download-card" data-os="linux">
+              <span class="os-icon" aria-hidden="true">🐧</span>
+              <h3>Linux</h3>
+              <p class="os-detail">Ejecutable <code>.AppImage</code> · 64 bits</p>
+              <a
+                class="btn btn-primary"
+                data-dl="linux"
+                href="https://github.com/cmurestudillos/mac-ftp/releases/latest"
+                >Descargar</a
+              >
+              <p class="dl-size" data-size="linux">&nbsp;</p>
+            </article>
+          </div>
+
+          <p class="muted small">
+            ¿Prefieres ver todos los archivos?
+            <a href="https://github.com/cmurestudillos/mac-ftp/releases" rel="noopener">Todas las versiones en GitHub</a
+            >.
+          </p>
+
+          <h2 class="section-title">Notas de instalación</h2>
+          <div class="note-grid">
+            <div class="note">
+              <h3>🪟 Windows</h3>
+              <p>
+                SmartScreen puede avisar de que el editor es desconocido porque el instalador no está firmado. Pulsa
+                <em>Más información → Ejecutar de todas formas</em>.
+              </p>
+            </div>
+            <div class="note">
+              <h3>🍎 macOS</h3>
+              <p>
+                Si Gatekeeper bloquea la app, ábrela con clic derecho → <em>Abrir</em>, o ejecuta
+                <code>xattr -cr "/Applications/MAC Transmit FTP.app"</code>.
+              </p>
+            </div>
+            <div class="note">
+              <h3>🐧 Linux</h3>
+              <p>
+                Dale permisos de ejecución: <code>chmod +x MAC-Transmit-FTP-*.AppImage</code> y lánzalo con doble clic.
+                En Ubuntu 22.04 o posterior puede hacer falta instalar <code>libfuse2</code>.
+              </p>
+            </div>
+          </div>
+
+          <h2 class="section-title">Compilar desde el código</h2>
+          <pre class="code-block"><code>git clone https://github.com/cmurestudillos/mac-ftp.git
+cd mac-ftp
+pnpm install
+
+pnpm start           # ejecutar en desarrollo
+pnpm package:win     # generar instalador de Windows
+pnpm package:mac     # generar imagen de macOS (solo desde un Mac)
+pnpm package:linux   # generar AppImage</code></pre>
+          <p class="muted small">
+            Requisitos: Node.js 22.12+ y pnpm 12. Los instaladores se generan en <code>release/</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ DOCUMENTACIÓN ══════════════════ -->
+      <section class="view" data-route="/documentacion">
+        <div class="container docs-layout">
+          <article class="docs-body">
+            <h1 class="page-title">Documentación</h1>
+
+            <h2 id="uso">Guía de uso</h2>
+            <h3>1. Conectar</h3>
+            <p>
+              Rellena <strong>Host</strong>, <strong>Puerto</strong> (21 por defecto), <strong>Usuario</strong> y
+              <strong>Contraseña</strong> y pulsa <strong>Conectar</strong>. Marca <em>Conexión segura (FTPS)</em> si tu
+              servidor usa TLS. El panel remoto se abre en tu carpeta de inicio del servidor y el indicador de la
+              cabecera pasa a <em>Conectado</em>. <strong>Desconectar</strong> cierra la sesión.
+            </p>
+
+            <h3>2. Guardar conexiones</h3>
+            <p>
+              Ponle un nombre y pulsa <strong>Guardar</strong>. Aparece en <em>Conexiones guardadas</em>: un clic
+              rellena el formulario, ⚡ conecta directamente y 🗑️ la elimina. Guardar con un nombre que ya existe
+              actualiza esa conexión.
+            </p>
+
+            <h3>3. Navegar</h3>
+            <p>
+              Doble clic en una carpeta para entrar y ⬆️ (o <kbd>Retroceso</kbd>) para subir. <em>Explorar…</em> abre
+              cualquier carpeta local. El campo <em>Filtrar por nombre</em> reduce la lista al instante y ⟳ (o
+              <kbd>F5</kbd>) la actualiza. Los enlaces simbólicos del servidor aparecen con 🔗 y se abren como carpeta
+              si apuntan a una.
+            </p>
+
+            <h3>4. Transferir</h3>
+            <p>
+              Los elementos siempre van a la carpeta abierta en el otro panel. Doble clic en un archivo (o
+              <kbd>Intro</kbd> con varios seleccionados) lo sube o lo descarga; para una carpeta usa el menú contextual
+              o arrástrala. También puedes soltar archivos desde el explorador del sistema en el panel remoto. Las
+              transferencias se encolan y se hacen de una en una; la barra inferior muestra el progreso y permite
+              cancelar.
+            </p>
+
+            <h3>5. Gestionar archivos</h3>
+            <p>
+              Clic derecho en un panel: <em>Abrir</em>, <em>Subir/Descargar</em>, <em>Renombrar</em>, <em>Eliminar</em>,
+              <em>Nueva carpeta</em> y <em>Actualizar</em>. En local, eliminar mueve a la papelera; en el servidor el
+              borrado es definitivo y las carpetas se eliminan con todo su contenido, por eso siempre se pide
+              confirmación.
+            </p>
+
+            <h2 id="seguridad">Contraseñas y seguridad</h2>
+            <p>
+              Las contraseñas de las conexiones guardadas se cifran con el almacén seguro del sistema (DPAPI en Windows,
+              Llavero en macOS, gnome-keyring o KWallet en Linux). En Linux sin llavero la conexión se guarda sin la
+              contraseña y tendrás que escribirla al conectar. Las conexiones guardadas por versiones anteriores, que
+              guardaban la contraseña en texto plano, se cifran automáticamente al abrir la app.
+            </p>
+            <p>
+              Recuerda que FTP sin cifrar envía usuario y contraseña en claro por la red: si tu servidor lo admite, usa
+              FTPS.
+            </p>
+
+            <h2 id="limitaciones">Limitaciones conocidas</h2>
+            <ul class="roadmap">
+              <li><span class="tag">SFTP</span> No es compatible con SFTP (SSH), solo con FTP y FTPS.</li>
+              <li>
+                <span class="tag">FTPS</span> Solo FTPS explícito (AUTH TLS, normalmente en el puerto 21) y con un
+                certificado válido: los autofirmados se rechazan.
+              </li>
+              <li>
+                <span class="tag">Pasivo</span> Las transferencias usan modo pasivo; el modo activo no está disponible.
+              </li>
+              <li><span class="tag">Una a una</span> Las transferencias se hacen en serie, no en paralelo.</li>
+              <li>
+                <span class="tag">Ocultos</span> <em>Mostrar ocultos</em> afecta a los nombres que empiezan por punto,
+                no al atributo «oculto» de Windows.
+              </li>
+            </ul>
+
+            <h2 id="arquitectura">Arquitectura</h2>
+            <pre
+              class="code-block"><code>├── main.js       # proceso principal: ventana, cliente FTP (basic-ftp), transferencias e IPC
+├── preload.js    # puente IPC seguro (contextIsolation activo)
+├── renderer.js   # interfaz: paneles, selección, atajos, cola de transferencias y menú contextual
+├── index.html    # estructura de la ventana
+├── styles.css    # estilos con tema claro y oscuro
+└── assets/       # iconos de la aplicación</code></pre>
+            <p>
+              Construida con <strong>Electron</strong>, <strong>basic-ftp</strong> para el protocolo FTP/FTPS y
+              <strong>electron-store</strong> para las conexiones guardadas. Sin frameworks de UI: HTML, CSS y
+              JavaScript.
+            </p>
+
+            <h2 id="roadmap">Roadmap</h2>
+            <ul class="roadmap">
+              <li><span class="tag">SFTP</span> Conexiones por SSH</li>
+              <li><span class="tag">Historial</span> Registro de las transferencias realizadas</li>
+              <li><span class="tag">Paralelo</span> Varias transferencias a la vez con límite de concurrencia</li>
+              <li><span class="tag">Columnas</span> Ordenar por nombre, tamaño o fecha</li>
+            </ul>
+
+            <h2 id="contribuir">Contribuir</h2>
+            <p>
+              Los issues y pull requests son bienvenidos. Abre un
+              <a href="https://github.com/cmurestudillos/mac-ftp/issues" rel="noopener">issue</a> describiendo el bug
+              (sistema operativo, tipo de servidor y si usas FTP o FTPS) o la funcionalidad que echas de menos.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <p class="brand-sm">📁 MAC Transmit FTP</p>
+          <p class="muted small">Licencia ISC · Hecho por Carlos Mur</p>
+        </div>
+        <nav aria-label="Enlaces del pie">
+          <a href="https://github.com/cmurestudillos/mac-ftp" rel="noopener">Repositorio</a>
+          <a href="https://github.com/cmurestudillos/mac-ftp/releases" rel="noopener">Versiones</a>
+          <a href="https://github.com/cmurestudillos/mac-ftp/issues" rel="noopener">Reportar un bug</a>
+          <a href="https://github.com/cmurestudillos" rel="noopener">@cmurestudillos</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" hidden>
+      <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+      <figure>
+        <img id="lightboxImg" src="" alt="" />
+        <figcaption id="lightboxCaption"></figcaption>
+      </figure>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
