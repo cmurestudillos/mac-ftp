@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
     <title>MAC Transmit FTP</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -14,12 +15,13 @@
           <div class="connection-form">
             <input type="text" id="connection-name" placeholder="Nombre de la conexión" />
             <input type="text" id="host" placeholder="Host" />
-            <input type="number" id="port" placeholder="Puerto" value="21" />
+            <input type="number" id="port" placeholder="Puerto" value="21" min="1" max="65535" />
             <input type="text" id="username" placeholder="Usuario" />
             <input type="password" id="password" placeholder="Contraseña" />
             <label> <input type="checkbox" id="secure" /> Conexión segura (FTPS) </label>
             <div class="button-group">
               <button id="connect-btn" class="primary-btn">Conectar</button>
+              <button id="disconnect-btn" class="danger-btn" hidden>Desconectar</button>
               <button id="save-btn">Guardar</button>
             </div>
           </div>
@@ -31,33 +33,43 @@
             </ul>
           </div>
         </div>
+        <div class="sidebar-footer">MAC Transmit FTP <span id="app-version"></span></div>
       </div>
 
       <div class="main-content">
         <div class="file-explorer-container">
-          <div class="file-explorer local">
+          <div class="file-explorer local" data-side="local">
             <div class="explorer-header">
-              <h3>Archivos locales</h3>
+              <div class="explorer-title">
+                <h3>Archivos locales</h3>
+                <button class="icon-btn" id="local-refresh-btn" title="Actualizar (F5)">⟳</button>
+              </div>
               <div class="path-navigation">
-                <button id="local-parent-btn">⬆️</button>
+                <button id="local-parent-btn" title="Carpeta superior (Retroceso)">⬆️</button>
                 <input type="text" id="local-path" readonly />
                 <button id="browse-btn">Explorar...</button>
               </div>
+              <input type="search" class="filter-input" id="local-filter" placeholder="Filtrar por nombre" />
             </div>
-            <div class="files-container" id="local-files">
+            <div class="files-container" id="local-files" tabindex="0">
               <!-- Archivos locales aquí -->
             </div>
           </div>
 
-          <div class="file-explorer remote">
+          <div class="file-explorer remote" data-side="remote">
             <div class="explorer-header">
-              <h3>Archivos remotos</h3>
+              <div class="explorer-title">
+                <h3>Archivos remotos</h3>
+                <span class="connection-badge" id="connection-badge">Sin conexión</span>
+                <button class="icon-btn" id="remote-refresh-btn" title="Actualizar (F5)">⟳</button>
+              </div>
               <div class="path-navigation">
-                <button id="remote-parent-btn">⬆️</button>
+                <button id="remote-parent-btn" title="Carpeta superior (Retroceso)">⬆️</button>
                 <input type="text" id="remote-path" value="/" readonly />
               </div>
+              <input type="search" class="filter-input" id="remote-filter" placeholder="Filtrar por nombre" />
             </div>
-            <div class="files-container" id="remote-files">
+            <div class="files-container" id="remote-files" tabindex="0">
               <!-- Archivos remotos aquí -->
             </div>
           </div>
@@ -65,10 +77,28 @@
 
         <div class="status-bar">
           <div id="status-message">Listo</div>
-          <div id="transfer-progress"></div>
+          <div id="transfer-progress" hidden>
+            <span id="transfer-label"></span>
+            <progress id="transfer-bar" max="1" value="0"></progress>
+            <span id="transfer-detail"></span>
+            <button id="transfer-cancel-btn" class="small-btn">Cancelar</button>
+          </div>
+          <label class="hidden-toggle"><input type="checkbox" id="show-hidden" checked /> Mostrar ocultos</label>
         </div>
       </div>
     </div>
+
+    <div id="context-menu" class="context-menu" hidden></div>
+
+    <dialog id="modal" class="modal">
+      <form method="dialog" id="modal-form">
+        <h3 id="modal-title"></h3>
+        <p id="modal-message"></p>
+        <ul id="modal-list"></ul>
+        <input type="text" id="modal-input" autocomplete="off" spellcheck="false" />
+        <div class="modal-buttons" id="modal-buttons"></div>
+      </form>
+    </dialog>
 
     <script src="renderer.js"></script>
   </body>
