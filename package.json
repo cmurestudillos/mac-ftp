@@ -1,8 +1,14 @@
 {
   "name": "mac-ftp",
-  "version": "1.1.0",
-  "description": "",
+  "version": "1.2.0",
+  "description": "Cliente FTP/FTPS de escritorio con doble panel, inspirado en Transmit",
+  "homepage": "https://cmurestudillos.github.io/mac-ftp/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmurestudillos/mac-ftp.git"
+  },
   "main": "main.js",
+  "packageManager": "pnpm@12.10.1",
   "scripts": {
     "start": "electron .",
     "lint": "eslint main.js preload.js renderer.js",
@@ -39,16 +45,46 @@
     "directories": {
       "output": "release/"
     },
+    "files": [
+      "**/*",
+      "!docs{,/**/*}",
+      "!.github{,/**/*}",
+      "!.vscode{,/**/*}",
+      "!release{,/**/*}",
+      "!README.md",
+      "!eslint.config.js",
+      "!pnpm-workspace.yaml",
+      "!.npmrc",
+      "!.prettierrc",
+      "!.prettierignore",
+      "!.gitattributes"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "cmurestudillos",
+      "repo": "mac-ftp",
+      "releaseType": "draft"
+    },
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "assets/icon.icns"
+      "icon": "assets/icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
     },
     "win": {
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.ico",
+      "target": "nsis"
     },
     "linux": {
       "icon": "assets/icon.png",
-      "category": "Development"
+      "category": "Development",
+      "target": "AppImage"
     }
   }
 }
