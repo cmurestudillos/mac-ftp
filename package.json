@@ -27,7 +27,7 @@
   "author": "Carlos Mur",
   "license": "ISC",
   "dependencies": {
-    "basic-ftp": "^5.0.5",
+    "basic-ftp": "^6.2.3",
     "electron-store": "^8.2.0"
   },
   "devDependencies": {
