@@ -121,11 +121,14 @@ de `main.js` (`electron -r <script> .`) y que no forma parte del repositorio:
 El workflow `.github/workflows/release.yml` compila los instaladores de Windows (`.exe`), macOS (`.dmg` arm64) y Linux
 (`.AppImage`) al subir un tag `vX.Y.Z` y los adjunta a un **borrador** de release.
 
-1. Sube la versión en `package.json` (la app la muestra sola en la barra lateral) y haz commit.
-2. Crea el tag, que debe coincidir con `package.json`: `git tag -a v1.2.0 -m "v1.2.0"`.
-3. Sube la rama y el tag: `git push origin develop` y `git push origin v1.2.0`.
-4. En _Actions_ espera a que **Release v1.2.0** termine (borrador + Windows + macOS + Linux).
-5. Revisa el borrador en _Releases_ y pulsa **Publish release**: la web pasa sola a la nueva versión.
+1. En una rama `chore/release-vX.Y.Z` sube la versión en `package.json` (la app la muestra sola en la barra lateral)
+   y en los textos de respaldo de `docs/index.html` (`heroVersion` y `releaseTag`). Abre un PR a `master`.
+2. Fusiona el PR (squash) y actualiza `master`: `git checkout master && git pull`.
+3. Crea el tag sobre `master`, que debe coincidir con `package.json`, y súbelo:
+   `git tag -a v1.2.1 -m "v1.2.1"` y `git push origin v1.2.1`. Fusionar el PR no crea el tag.
+4. En _Actions_ espera a que **Release v1.2.1** termine (borrador + Windows + macOS + Linux).
+5. Revisa el borrador en _Releases_ y pulsa **Publish release**: las descargas de la web pasan solas a la nueva versión.
+6. Lleva `master` a `develop`: `git checkout develop && git merge --ff-only master && git push`.
 
 ## Tecnologías utilizadas
 

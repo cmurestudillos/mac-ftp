@@ -1,6 +1,6 @@
 {
   "name": "mac-ftp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Cliente FTP/FTPS de escritorio con doble panel, inspirado en Transmit",
   "homepage": "https://cmurestudillos.github.io/mac-ftp/",
   "repository": {
