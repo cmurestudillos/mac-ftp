@@ -10,6 +10,7 @@
   "main": "main.js",
   "packageManager": "pnpm@12.10.1",
   "scripts": {
+    "postinstall": "install-electron",
     "start": "electron .",
     "lint": "eslint main.js preload.js renderer.js",
     "lint:fix": "eslint --fix main.js preload.js renderer.js",
