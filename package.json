@@ -10,6 +10,7 @@
   "main": "main.js",
   "packageManager": "pnpm@12.10.1",
   "scripts": {
+    "postinstall": "install-electron",
     "start": "electron .",
     "lint": "eslint main.js preload.js renderer.js",
     "lint:fix": "eslint --fix main.js preload.js renderer.js",
@@ -31,7 +32,7 @@
     "electron-store": "^8.2.0"
   },
   "devDependencies": {
-    "electron": "^41.10.6",
+    "electron": "^42.11.18",
     "electron-builder": "^26.15.7",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
